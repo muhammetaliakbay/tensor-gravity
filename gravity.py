@@ -122,16 +122,16 @@ frames = int(60/time_delta)
 ani = FuncAnimation(
     fig,
     animate,
-    # frames=frames,
+    frames=frames,
     interval=1.0/time_delta,
     blit=False,
 )
 
-# with tqdm(total=frames) as pbar:
-#     ani.save(
-#         "gravity.mp4",
-#         fps=1.0/time_delta,
-#         progress_callback=lambda i, n: pbar.update(i)
-#     )
+with tqdm(total=frames) as pbar:
+    ani.save(
+        "gravity.mp4",
+        fps=1.0/time_delta,
+        progress_callback=lambda i, n: pbar.update(1)
+    )
 
-plt.show()
+# plt.show()
