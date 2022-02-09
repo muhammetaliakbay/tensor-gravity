@@ -15,10 +15,6 @@ def delta_combination(a, peer):
     tile_h = tf.tile(expand_h, (1, a.shape[0], 1))
     return tile_h - tile_v
 
-@tf.function
-def nan_to_zero(a):
-    return tf.where(tf.math.is_nan(a), tf.zeros_like(a), a)
-
 batches = 10
 particles_per_batch = 1000
 
@@ -63,10 +59,9 @@ def calculate(peer_location_variable, location_variable, acceleration_variable):
 
     abs_distances = tf.sqrt(tf.reduce_sum(tf.square(distances), axis=-1))
 
-    forces = G * ( (mass * mass) / abs_distances )
+    forces = tf.math.divide_no_nan(G * mass * mass, abs_distances)
 
-    peer_accelerations = (tf.expand_dims(forces / mass, -1) * distances) / tf.expand_dims(abs_distances, -1)
-    peer_accelerations = nan_to_zero(peer_accelerations)
+    peer_accelerations = tf.math.divide_no_nan(tf.expand_dims(forces / mass, -1) * distances, tf.expand_dims(abs_distances, -1))
 
     acceleration_variable.assign(-tf.reduce_sum(peer_accelerations, -2))
 
@@ -90,7 +85,7 @@ def animate(real_frame):
         locations[:,2].numpy(),
     )
     graph.set_color(cm.hot(tf.concat(color_variables, 0).numpy()))
-    title.set_text('3D Test, time={}'.format(real_frame))
+    title.set_text('Gravity, Frame={}'.format(real_frame))
     return title, graph, 
 
 fig = plt.figure(figsize=(5, 5))
