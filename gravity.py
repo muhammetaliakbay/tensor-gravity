@@ -33,7 +33,8 @@ location_variables = [
     for i in range(batches)
 ]
 velocity_variables = [
-    tf.Variable(tf.random.uniform((particles_per_batch, 3), -0.1, 0.1, seed = i + 1_000_000))
+    tf.Variable(location_variables[i].numpy())
+    # tf.Variable(tf.random.uniform((particles_per_batch, 3), -0.1, 0.1, seed = i + 1_000_000))
     for i in range(batches)
 ]
 acceleration_variables = [
@@ -62,7 +63,7 @@ def calculate(peer_location_variable, location_variable, acceleration_variable):
 
     abs_distances = tf.sqrt(tf.reduce_sum(tf.square(distances), axis=-1))
 
-    forces = ( G * ( (mass * mass) / abs_distances ) )
+    forces = G * ( (mass * mass) / abs_distances )
 
     peer_accelerations = (tf.expand_dims(forces / mass, -1) * distances) / tf.expand_dims(abs_distances, -1)
     peer_accelerations = nan_to_zero(peer_accelerations)
@@ -104,7 +105,7 @@ ax.set_zticks([])
 ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0))
 ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0))
 ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0))
-lim = 1.5
+lim = 5
 ax.set_xlim([-lim, lim])
 ax.set_ylim([-lim, lim])
 ax.set_zlim([-lim, lim])
