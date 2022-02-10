@@ -112,7 +112,8 @@ graph = ax.scatter(
     s=0.5
 )
 
-frames = int(60/time_delta)
+duration = 60
+frames = int(duration/time_delta)
 
 ani = FuncAnimation(
     fig,
