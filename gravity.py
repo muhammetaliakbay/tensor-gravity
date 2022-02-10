@@ -117,8 +117,7 @@ frames = int(60/time_delta)
 ani = FuncAnimation(
     fig,
     animate,
-    frames=frames,
-    interval=1.0/time_delta,
+    interval=time_delta*1000,
     blit=False,
 )
 
